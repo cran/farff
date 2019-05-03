@@ -11,12 +11,12 @@ Imports: BBmisc, checkmate (>= 1.8.0), stringi, readr (>= 1.0.0)
 Suggests: RWeka, testthat, OpenML
 LazyData: yes
 ByteCompile: yes
-Version: 1.0
-RoxygenNote: 5.0.1
+Version: 1.1
+RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2016-09-10 19:42:46 UTC; bischl
+Packaged: 2019-05-03 13:13:43 UTC; lang
 Author: Bernd Bischl [aut, cre],
   Jakob Bossek [aut]
 Maintainer: Bernd Bischl <bernd_bischl@gmx.net>
 Repository: CRAN
-Date/Publication: 2016-09-11 00:22:21
+Date/Publication: 2019-05-03 13:30:08 UTC

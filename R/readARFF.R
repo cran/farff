@@ -52,6 +52,7 @@ readARFF = function(path, data.reader = "readr",
   convert.to.logicals = TRUE,
   show.info = TRUE, ...) {
   assertFileExists(path, access = "r")
+  path = path.expand(path)
   assertChoice(data.reader, c("readr"))
   assertPathForOutput(tmp.file, overwrite = TRUE)
   assertFlag(convert.to.logicals)
@@ -75,9 +76,12 @@ readARFF = function(path, data.reader = "readr",
   on.exit({unlink(tmp.file)})
 
   # preprocess data (depends on data reader)
-  preproc.fun = if (data.reader == "data.table") c_dt_preproc else c_rd_preproc
   requirePackages(data.reader)
-  st2 = g(.Call(preproc.fun, path, tmp.file, as.integer(header$line.counter)))
+  if (data.reader == "data.table") {
+    st2 = g(.Call(c_dt_preproc, path, tmp.file, as.integer(header$line.counter), PACKAGE = "farff"))
+  } else {
+    st2 = g(.Call(c_rd_preproc, path, tmp.file, as.integer(header$line.counter), PACKAGE = "farff"))
+  }
 
   col.types = stri_replace_all(header$col.types, fixed = "factor", "character")
 
@@ -110,7 +114,7 @@ readARFF = function(path, data.reader = "readr",
     if (col.type == "factor") {
       clevs = header$col.levels[[i]]
       # RWEKA parses this to logical
-      if (convert.to.logicals && (identical(clevs, c("TRUE", "FALSE")) || identical(clevs, c("FALSE", "TRUE"))))
+      if (convert.to.logicals && all(clevs %in% c("TRUE", "FALSE")))
         dat[, i] = as.logical(dat[, i])
       else
         dat[, i] = factor(dat[, i], levels = clevs)
